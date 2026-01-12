@@ -7,7 +7,7 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
 from pkg.utils import raise_internal_error
-from routes import (session, admin, object)
+from routes import (session, admin, object, ota)
 from model.database import Database
 import os
 import pkg.conf
@@ -15,7 +15,7 @@ from pkg import utils
 
 from loguru import logger
 
-Router = [admin, session, object]
+Router = [admin, session, object, ota]
 
 # Findreve 的生命周期
 @asynccontextmanager

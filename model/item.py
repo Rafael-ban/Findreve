@@ -6,6 +6,7 @@ from sqlmodel import Field, Relationship, String
 from pydantic_extra_types.semantic_version import SemanticVersion
 
 from .base import SQLModelBase, UUIDTableBase
+from .firmware import ChipTypeEnum
 
 if TYPE_CHECKING:
     from .user import User
@@ -40,6 +41,9 @@ class ItemBase(SQLModelBase):
 
     version: SemanticVersion = Field(sa_type=String(64))
     """版本号"""
+
+    chip_type: ChipTypeEnum | None = Field(default=None, index=True)
+    """ESP设备芯片类型，仅当type=esp32时有值"""
 
 class Item(ItemBase, UUIDTableBase, table=True):
     expires_at: datetime | None = None

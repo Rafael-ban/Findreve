@@ -3,6 +3,15 @@ from .setting import Setting, SettingResponse
 from .item import Item, ItemDataResponse, ItemTypeEnum, ItemStatusEnum
 from .user import User, UserTypeEnum
 from .database import Database
+from .firmware import (
+    Firmware,
+    FirmwareDataResponse,
+    FirmwareDataResponseAdmin,
+    FirmwareUploadRequest,
+    FirmwareCheckUpdateRequest,
+    FirmwareCheckUpdateResponse,
+    ChipTypeEnum,
+)
 
 # 新增：从 foxline 项目移植的 Mixin 组件
 from .mixin.table import (
@@ -27,6 +36,14 @@ __all__ = [
     "User",
     "UserTypeEnum",
     "Database",
+    # 固件相关
+    "Firmware",
+    "FirmwareDataResponse",
+    "FirmwareDataResponseAdmin",
+    "FirmwareUploadRequest",
+    "FirmwareCheckUpdateRequest",
+    "FirmwareCheckUpdateResponse",
+    "ChipTypeEnum",
     # 新增的 Mixin 组件
     "TableBaseMixin",
     "UUIDTableBaseMixin",

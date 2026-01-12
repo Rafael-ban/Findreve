@@ -1,5 +1,5 @@
 from enum import StrEnum
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
 import sqlalchemy as sa
 from pydantic import EmailStr
@@ -9,6 +9,9 @@ from sqlmodel import Field, Relationship
 
 from .base import SQLModelBase, UUIDTableBase
 from .item import Item
+
+if TYPE_CHECKING:
+    from .firmware import Firmware
 
 
 class UserTypeEnum(StrEnum):
@@ -37,6 +40,9 @@ class User(UserBase, UUIDTableBase, table=True):
 
     items: list[Item] = Relationship(back_populates='user', cascade_delete=True)
     """物品关系"""
+
+    firmwares: list['Firmware'] = Relationship(back_populates='uploaded_by', cascade_delete=True)
+    """上传的固件关系"""
 
     _initializing: ClassVar[bool] = False
     """标记当前是否处于初始化阶段，初始化阶段允许创建 super_admin"""

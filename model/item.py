@@ -2,7 +2,8 @@ from datetime import datetime
 from enum import StrEnum
 from typing import TYPE_CHECKING, Optional
 from uuid import UUID
-from sqlmodel import Field, Relationship
+from sqlmodel import Field, Relationship, String
+from pydantic_extra_types.semantic_version import SemanticVersion
 
 from .base import SQLModelBase, UUIDTableBase
 
@@ -12,6 +13,7 @@ if TYPE_CHECKING:
 class ItemTypeEnum(StrEnum):
     normal = 'normal'
     car = 'car'
+    esp32 = 'esp32'
 
 class ItemStatusEnum(StrEnum):
     ok = 'ok'
@@ -36,6 +38,9 @@ class ItemBase(SQLModelBase):
     description: str | None = None
     """物品描述"""
 
+    version: SemanticVersion = Field(sa_type=String(64))
+    """版本号"""
+
 class Item(ItemBase, UUIDTableBase, table=True):
     expires_at: datetime | None = None
     """物品过期时间"""
@@ -56,14 +61,7 @@ class Item(ItemBase, UUIDTableBase, table=True):
     sub_items: list['Item'] = Relationship(back_populates='parent_item', passive_deletes='all')
 
 class ItemDataUpdateRequest(ItemBase):
-    type: ItemTypeEnum | None = None
-    """物品的类型"""
-
-    name: str | None = None
-    """物品名称"""
-
-    status: ItemStatusEnum | None = None
-    """物品状态"""
+    pass
 
 class ItemDataResponse(ItemBase):
     expires_at: datetime | None = None

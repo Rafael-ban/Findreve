@@ -4,11 +4,10 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Query, Request
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from dependencies import SessionDep
 from middleware.user import get_current_user
-from model import DefaultResponse, User, database
+from model import DefaultResponse, User
 from model.item import ItemDataUpdateRequest
 from services import object as object_service
 from starlette.status import HTTP_204_NO_CONTENT
@@ -25,7 +24,7 @@ Router = APIRouter(prefix='/api/object', tags=['物品 Object'])
     response_description='物品信息列表'
 )
 async def get_items(
-    session: Annotated[AsyncSession, Depends(database.Database.get_session)],
+    session: SessionDep,
     token: Annotated[User, Depends(get_current_user)],
     id: int | None = Query(default=None, ge=1, description='物品ID'),
     key: str | None = Query(default=None, description='物品序列号')):
@@ -50,7 +49,7 @@ async def get_items(
     response_description='添加物品成功'
 )
 async def add_items(
-    session: Annotated[AsyncSession, Depends(database.Database.get_session)],
+    session: SessionDep,
     user: Annotated[User, Depends(get_current_user)],
     request: ItemDataUpdateRequest
 ):
@@ -71,7 +70,7 @@ async def add_items(
     response_description='更新物品成功'
 )
 async def update_items(
-    session: Annotated[AsyncSession, Depends(database.Database.get_session)],
+    session: SessionDep,
     user: Annotated[User, Depends(get_current_user)],
     item_id: UUID,
 	request: ItemDataUpdateRequest,
@@ -107,7 +106,7 @@ async def update_items(
     response_description='删除物品成功'
 )
 async def delete_items(
-    session: Annotated[AsyncSession, Depends(database.Database.get_session)],
+    session: SessionDep,
     user: Annotated[User, Depends(get_current_user)],
 	item_id: UUID
 ):
@@ -129,7 +128,7 @@ async def delete_items(
     response_description="物品信息"
 )
 async def get_object(
-    session: Annotated[AsyncSession, Depends(database.Database.get_session)],
+    session: SessionDep,
 	item_id: UUID,
     request: Request
 ) -> DefaultResponse:
@@ -151,10 +150,9 @@ async def get_object(
     response_description="挪车通知结果"
 )
 async def notify_move_car(
-    _request: Request,
     session: SessionDep,
     item_id: UUID,
-    phone: str = None,
+    phone: str | None = None,
 ):
     """
     通知车主进行挪车 / Notify car owner to move the car

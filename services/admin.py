@@ -180,7 +180,7 @@ async def list_firmwares(
     if conditions:
         results = await Firmware.get(session, and_(*conditions), fetch_mode="all")
     else:
-        results = await Firmware.get(session, fetch_mode="all")
+        results = await Firmware.get(session, None, fetch_mode="all")
 
     if not results:
         return []
